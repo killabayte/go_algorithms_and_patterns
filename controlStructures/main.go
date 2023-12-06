@@ -10,6 +10,7 @@ func price(item string) int {
 	case "carrot":
 		return 5
 	}
+
 }
 
 func main() {
@@ -19,4 +20,6 @@ func main() {
 			println(i)
 		}
 	}
+
+	price("apple")
 }
