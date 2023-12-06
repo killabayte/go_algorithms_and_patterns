@@ -8,6 +8,7 @@ func main() {
 	fmt.Println(n[len(n)-1])
 	fmt.Println(append(n, 11, 13, 15, 17, 19))
 
+	//Maps
 	sh := map[string]string{
 		"name":  "Invinceble",
 		"email": "invincible@amazon.com",
