@@ -29,8 +29,15 @@ func main() {
 		Age:  18,
 	}
 
+	om := SuperHero{
+		Name: "Omni Man",
+		Role: "problem dealer",
+		Age:  3000,
+	}
+
 	fmt.Println(sh)
 	fmt.Printf("Super hero says: I'm %s\n", sh.Name)
 
 	fmt.Println(sh.Salary())
+	fmt.Println(om.Salary())
 }
