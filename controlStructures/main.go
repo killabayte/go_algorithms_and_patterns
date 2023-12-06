@@ -1,6 +1,16 @@
 package main
 
-//Switch is the second one
+// Switch is the second one
+func price(item string) int {
+	switch item {
+	case "apple":
+		return 10
+	case "orange":
+		return 20
+	case "carrot":
+		return 5
+	}
+}
 
 func main() {
 	//For loop - one of the control structure
