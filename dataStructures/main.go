@@ -14,4 +14,11 @@ func main() {
 		"role":  "problem solver",
 	}
 	fmt.Println(sh)
+	age, ok := sh["age"]
+	if !ok {
+		fmt.Println("Age not found")
+	} else {
+		fmt.Println("Age:", age)
+	}
+
 }
