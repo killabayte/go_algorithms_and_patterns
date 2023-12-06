@@ -9,9 +9,9 @@ func main() {
 	fmt.Println(append(n, 11, 13, 15, 17, 19))
 
 	sh := map[string]string{
-		"name":  "Invinceble",
-		"email": "invincible@amazon.com",
-		"role":  "problem solver",
+		"name":  "Invinceble\n",
+		"email": "invincible@amazon.com\n",
+		"role":  "problem solver\n",
 	}
 	fmt.Println(sh)
 }
