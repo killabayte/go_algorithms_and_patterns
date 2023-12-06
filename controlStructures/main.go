@@ -1,5 +1,7 @@
 package main
 
+//Switch is the second one
+
 func main() {
 	//For loop - one of the control structure
 	for i := 0; i < 10; i++ {
@@ -7,7 +9,4 @@ func main() {
 			println(i)
 		}
 	}
-
-	//Switch is the second one
-
 }
