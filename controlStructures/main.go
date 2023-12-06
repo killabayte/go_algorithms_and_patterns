@@ -9,6 +9,8 @@ func price(item string) int {
 		return 20
 	case "carrot":
 		return 5
+	default:
+		return 0
 	}
 
 }
