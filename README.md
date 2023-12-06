@@ -1,0 +1,1 @@
+Delve into Go's powerful data structure, algorithms, classical design patterns by using TDD with some easy tricks
