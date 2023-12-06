@@ -22,6 +22,10 @@ func (sh SuperHero) Salary() int {
 	}
 }
 
+func (sh SuperHero) UpdateRole(role string) {
+	sh.Role = role
+}
+
 func main() {
 	sh := SuperHero{
 		Name: "Invincible",
@@ -40,4 +44,7 @@ func main() {
 
 	fmt.Println(sh.Name, sh.Salary())
 	fmt.Println(om.Name, om.Salary())
+
+	sh.UpdateRole("Middle problem solver")
+	fmt.Println(sh.Name, sh.Salary())
 }
