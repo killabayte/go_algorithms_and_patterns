@@ -38,6 +38,6 @@ func main() {
 	fmt.Println(sh)
 	fmt.Printf("Super hero says: I'm %s\n", sh.Name)
 
-	fmt.Println(sh.Salary())
-	fmt.Println(om.Salary())
+	fmt.Println(sh.Name, sh.Salary())
+	fmt.Println(om.Name, om.Salary())
 }
