@@ -22,7 +22,7 @@ func (sh SuperHero) Salary() int {
 	}
 }
 
-func (sh SuperHero) UpdateRole(role string) {
+func (sh *SuperHero) UpdateRole(role string) {
 	sh.Role = role
 }
 
