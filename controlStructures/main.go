@@ -27,4 +27,6 @@ func main() {
 	println(price("carrot"))
 	println(price("macbook air"))
 	println(price("tomatoes"))
+
+	//Third this is regular IF condition which is the same as in most programming languages
 }
