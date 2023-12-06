@@ -3,7 +3,7 @@ package main
 // Switch is the second one
 func price(item string) int {
 	switch item {
-	case "apple":
+	case "apple", "tomatoes":
 		return 10
 	case "orange":
 		return 20
@@ -23,5 +23,8 @@ func main() {
 		}
 	}
 
-	price("apple")
+	println(price("apple"))
+	println(price("carrot"))
+	println(price("macbook air"))
+	println(price("tomatoes"))
 }
