@@ -23,10 +23,12 @@ func (sh SuperHero) Salary() int {
 func main() {
 	sh := SuperHero{
 		Name: "Invincible",
-		Role: "Problem Solver",
+		Role: "problem solver",
 		Age:  18,
 	}
 
 	fmt.Println(sh)
 	fmt.Printf("Super hero says: I'm %s\n", sh.Name)
+
+	fmt.Println(sh.Salary())
 }
