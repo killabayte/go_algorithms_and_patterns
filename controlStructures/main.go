@@ -7,4 +7,7 @@ func main() {
 			println(i)
 		}
 	}
+
+	//Switch is the second one
+
 }
