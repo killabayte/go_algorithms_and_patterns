@@ -36,4 +36,7 @@ func main() {
 
 	n := l.First()
 	println(n.value)
+
+	n = n.Next()
+	println(n.value)
 }
