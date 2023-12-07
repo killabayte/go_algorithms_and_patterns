@@ -19,6 +19,10 @@ func (l *List) Push(value int) {
 	l.tail = node
 }
 
+func (l *List) Last() *Node {
+	return l.tail
+}
+
 func (n *Node) Next() *Node {
 	return n.next
 }
