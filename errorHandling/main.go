@@ -10,6 +10,7 @@ type SuperHero struct {
 	Age               int
 }
 
+// Return error in the end
 func (sh SuperHero) Salary() (int, error) {
 	switch sh.Role {
 	case "Junior problem solver":
