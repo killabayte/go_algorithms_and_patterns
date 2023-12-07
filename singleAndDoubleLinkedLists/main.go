@@ -35,8 +35,11 @@ func main() {
 	l.Push(3)
 
 	n := l.First()
-	println(n.value)
-
-	n = n.Next()
-	println(n.value)
+	for {
+		println(n.value)
+		n = n.Next()
+		if n == nil {
+			break
+		}
+	}
 }
