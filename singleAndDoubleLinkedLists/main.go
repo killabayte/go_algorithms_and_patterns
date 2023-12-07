@@ -14,6 +14,7 @@ func (l *List) Push(value int) {
 	if l.head == nil {
 		l.head = node
 	}
+	l.tail = node
 }
 
 func (n *Node) Next() *Node {
