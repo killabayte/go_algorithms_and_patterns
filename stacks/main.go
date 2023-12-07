@@ -5,6 +5,7 @@ type Stack struct {
 }
 
 func (s *Stack) Push(item int) {
+	s.items = append(s.items, item)
 
 }
 
