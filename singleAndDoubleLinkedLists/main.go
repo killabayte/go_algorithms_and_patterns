@@ -2,6 +2,7 @@ package main
 
 type List struct {
 	head *Node
+	tail *Node
 }
 
 func (l *List) First() *Node {
