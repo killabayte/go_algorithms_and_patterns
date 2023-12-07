@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type List struct {
 	head *Node
 	tail *Node
@@ -55,6 +57,16 @@ func main() {
 	l.Push(1)
 	l.Push(2)
 	l.Push(3)
+
+	// Finding nodes in the linked list
+	valueToFind := 2
+	foundNode := l.Find(valueToFind)
+
+	if foundNode != nil {
+		fmt.Printf("Node with value %d found in the linked list.\n", valueToFind)
+	} else {
+		fmt.Printf("Node with value %d not found in the linked list.\n", valueToFind)
+	}
 
 	n := l.First()
 	for {
