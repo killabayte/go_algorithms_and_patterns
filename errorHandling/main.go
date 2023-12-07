@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 )
 
 type SuperHero struct {
@@ -32,6 +33,8 @@ func main() {
 	user := SuperHero{Name: "Robot", Role: "Architecture Designer"}
 	salary, err := user.Salary()
 	if err != nil {
-
+		fmt.Println(err)
+	} else {
+		fmt.Println("Salary:", salary)
 	}
 }
