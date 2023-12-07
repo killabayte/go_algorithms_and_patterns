@@ -18,4 +18,10 @@ func main() {
 	q.Enqueue(3)
 	q.Enqueue(4)
 	q.Enqueue(5)
+
+	println(q.Dequeue())
+	println(q.Dequeue())
+	println(q.Dequeue())
+	println(q.Dequeue())
+	println(q.Dequeue())
 }
