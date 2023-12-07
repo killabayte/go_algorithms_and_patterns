@@ -9,7 +9,10 @@ func (l *List) First() *Node {
 }
 
 func (l *List) Push(value int) {
-	//TBD
+	node := &Node{value: value}
+	if l.head == nil {
+		l.head = node
+	}
 }
 
 func (n *Node) Next() *Node {
