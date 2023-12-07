@@ -13,6 +13,8 @@ func (l *List) Push(value int) {
 	node := &Node{value: value}
 	if l.head == nil {
 		l.head = node
+	} else {
+		l.tail.next = node
 	}
 	l.tail = node
 }
