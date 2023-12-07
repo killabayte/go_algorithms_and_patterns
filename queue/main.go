@@ -12,5 +12,4 @@ func (q *Queue) Dequeue() int {
 }
 
 func main() {
-
 }
