@@ -51,4 +51,13 @@ func main() {
 			break
 		}
 	}
+
+	n = l.Last()
+	for {
+		println(n.value)
+		n = n.Prev()
+		if n == nil {
+			break
+		}
+	}
 }
