@@ -31,4 +31,7 @@ func main() {
 	l.Push(1)
 	l.Push(2)
 	l.Push(3)
+
+	n := l.First()
+	println(n.value)
 }
