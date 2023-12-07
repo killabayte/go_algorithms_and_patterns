@@ -21,7 +21,9 @@ func (sh SuperHero) Salary() (int, error) {
 	case "problem dealer":
 		return 500000, nil
 	default:
-		return 0, errors.New("Error to handle this role")
+		return 0, errors.New(
+			fmt.Sprintf("Error to handle this role: %s", sh.Role),
+		)
 	}
 }
 
