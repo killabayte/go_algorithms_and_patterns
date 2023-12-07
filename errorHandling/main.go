@@ -14,7 +14,7 @@ func (sh SuperHero) Salary() (int, error) {
 	case "Middle problem solver":
 		return 1000, nil
 	case "problem solver":
-		return 50000
+		return 50000, nil
 	case "problem dealer":
 		return 500000
 	default:
