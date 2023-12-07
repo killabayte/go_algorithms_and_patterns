@@ -22,7 +22,7 @@ func (sh SuperHero) Salary() (int, error) {
 		return 500000, nil
 	default:
 		return 0, errors.New(
-			fmt.Sprintf("Error to handle this role: %s", sh.Role),
+			fmt.Sprintf("Error to handle this role: \"%s\"", sh.Role),
 		)
 	}
 }
