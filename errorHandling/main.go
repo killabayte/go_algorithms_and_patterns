@@ -30,5 +30,5 @@ func (sh *SuperHero) UpdateRole(role string) {
 
 func main() {
 	user := SuperHero{Name: "Robot", Role: "Architecture Designer"}
-	user.Salary()
+	sallary, err := user.Salary()
 }
