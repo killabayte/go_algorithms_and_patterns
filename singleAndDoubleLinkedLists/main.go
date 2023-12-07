@@ -24,6 +24,18 @@ func (l *List) Last() *Node {
 	return l.tail
 }
 
+func (l *List) Find(value int) *Node {
+	current := l.head
+
+	for current != nil {
+		if current.value == value {
+			return current
+		}
+		current = current.next
+	}
+	return nil
+}
+
 type Node struct {
 	value int
 	next  *Node
