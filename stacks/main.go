@@ -19,4 +19,10 @@ func main() {
 	s.Push(3)
 	s.Push(4)
 	s.Push(5)
+
+	println(s.Pop())
+	println(s.Pop())
+	println(s.Pop())
+	println(s.Pop())
+	println(s.Pop())
 }
