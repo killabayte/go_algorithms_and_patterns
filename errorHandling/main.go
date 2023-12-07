@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+)
 
 type SuperHero struct {
 	Name, Role, Email string
@@ -18,7 +20,7 @@ func (sh SuperHero) Salary() (int, error) {
 	case "problem dealer":
 		return 500000, nil
 	default:
-		return 0, nil
+		return 0, errors.New("Error to handle this role")
 	}
 }
 
@@ -27,24 +29,5 @@ func (sh *SuperHero) UpdateRole(role string) {
 }
 
 func main() {
-	sh := SuperHero{
-		Name: "Invincible",
-		Role: "problem solver",
-		Age:  18,
-	}
 
-	om := SuperHero{
-		Name: "Omni Man",
-		Role: "problem dealer",
-		Age:  3000,
-	}
-
-	fmt.Println(sh)
-	fmt.Printf("Super hero says: I'm %s\n", sh.Name)
-
-	fmt.Println(sh.Name, sh.Salary())
-	fmt.Println(om.Name, om.Salary())
-
-	sh.UpdateRole("Middle problem solver")
-	fmt.Println(sh.Name, sh.Salary())
 }
