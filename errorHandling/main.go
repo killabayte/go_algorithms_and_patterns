@@ -34,8 +34,7 @@ func (sh *SuperHero) UpdateRole(role string) {
 
 func main() {
 	user := SuperHero{Name: "Robot", Role: "Architecture Designer"}
-	salary, err := user.Salary()
-	if err != nil {
+	if salary, err := user.Salary(); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("Salary:", salary)
