@@ -10,7 +10,7 @@ type SuperHero struct {
 func (sh SuperHero) Salary() (int, error) {
 	switch sh.Role {
 	case "Junior problem solver":
-		return 500
+		return 500, nil
 	case "Middle problem solver":
 		return 1000
 	case "problem solver":
