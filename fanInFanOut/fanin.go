@@ -13,7 +13,9 @@ func sleep(){
 }
 
 func consumer(ch <- chan int){
-	
+	for n:= range sh{
+		fmt.Printf("<- %d\n", n)
+	}
 }
 
 func producer(ch chan<- int, name string) {
@@ -33,6 +35,6 @@ func main() {
 	go producer(chA, "A")
 	go producer(chB, "B")
 
-	go consumer()
+	go consumer(chC)
 
 }
