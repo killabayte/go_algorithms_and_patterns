@@ -14,7 +14,7 @@ func sleep() {
 
 func consumer(ch <-chan int, name string) {
 	for n := range ch {
-		fmt.Printf("<- %d\n", n)
+		fmt.Printf("Consumer %s <- %d\n", name, n)
 	}
 }
 
