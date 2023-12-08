@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-func sleep(){
+func sleep() {
 	time.Sleep(
-		time.Duration(rand.Intn(3000)) * time.Millisecond
+		time.Duration(rand.Intn(3000)) * time.Millisecond,
 	)
 }
 
-func consumer(ch <- chan int){
-	for n:= range sh{
+func consumer(ch <-chan int) {
+	for n := range ch {
 		fmt.Printf("<- %d\n", n)
 	}
 }
@@ -27,13 +27,13 @@ func producer(ch chan<- int, name string) {
 	}
 }
 
-func fanIn(chA, chB <- chan int, chC chan <- int){
+func fanIn(chA, chB <-chan int, chC chan<- int) {
 	var n int
 	for {
-		select{
-		case n = <- chA:
+		select {
+		case n = <-chA:
 			chC <- n
-		case n = <- chB:
+		case n = <-chB:
 			chC <- n
 		}
 	}
@@ -48,5 +48,7 @@ func main() {
 	go producer(chB, "B")
 
 	go consumer(chC)
+
+	fanIn(chA, chB, chC)
 
 }
