@@ -27,6 +27,16 @@ func producer(ch chan<- int, name string) {
 	}
 }
 
+func fanIn(chA, chB <- chan int, chC chan <- int){
+	var n int
+	for {
+		select{
+		case n = <- chA:
+		case n = <- chB:
+		}
+	}
+}
+
 func main() {
 	chA := make(chan int)
 	chB := make(chan int)
