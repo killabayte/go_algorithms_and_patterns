@@ -13,5 +13,5 @@ func process2(ch chan int) {
 
 func main() {
 	ch := make(chan int)
-	go process2()
+	go process2(ch)
 }
