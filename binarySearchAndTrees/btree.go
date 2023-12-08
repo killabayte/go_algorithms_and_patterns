@@ -36,7 +36,9 @@ func (n *Node) insert(value int) {
 }
 
 func (n *Node) exists(value int) bool {
-
+	if n == nil {
+		return false
+	}
 }
 
 func printNode(n *Node) {
