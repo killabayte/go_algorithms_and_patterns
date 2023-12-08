@@ -40,7 +40,7 @@ func (n *Node) exists(value int) bool {
 		return false
 	}
 
-	if n.value = value{
+	if n.value == value {
 		return true
 	}
 }
