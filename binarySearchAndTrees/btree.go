@@ -44,6 +44,7 @@ func (n *Node) exists(value int) bool {
 		return true
 	}
 
+	println("value", n.value)
 	if value <= n.value {
 		return n.left.exists(value)
 	} else {
