@@ -26,5 +26,11 @@ func (n *Node) insert(value int) {
 		} else {
 			n.left.insert(value)
 		}
+	} else {
+		if n.right == nil {
+			n.right = &Node{value: value}
+		} else {
+			n.right.insert(value)
+		}
 	}
 }
