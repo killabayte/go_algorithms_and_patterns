@@ -39,6 +39,10 @@ func printNode(n *Node) {
 	if n == nil {
 		return
 	}
+
+	println(n.value)
+	printNode(n.left)
+	printNode(n.right)
 }
 
 func main() {
