@@ -54,4 +54,5 @@ func main() {
 		insert(0).
 		insert(15).
 		insert(25)
+	printNode(t.node)
 }
