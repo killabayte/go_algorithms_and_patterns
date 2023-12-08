@@ -35,6 +35,12 @@ func (n *Node) insert(value int) {
 	}
 }
 
+func printNode(n *Node) {
+	if n == nil {
+		return
+	}
+}
+
 func main() {
 	t := &Tree{}
 	t.insert(10).
