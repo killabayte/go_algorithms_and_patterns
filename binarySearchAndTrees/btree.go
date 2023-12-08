@@ -76,5 +76,5 @@ func main() {
 	println(t.node.exists(25))
 
 	//False
-
+	println(t.node.exists(144))
 }
