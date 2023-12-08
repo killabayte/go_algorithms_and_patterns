@@ -37,5 +37,11 @@ func (n *Node) insert(value int) {
 
 func main() {
 	t := &Tree{}
-
+	t.insert(10).
+		insert(8).
+		insert(20).
+		insert(9).
+		insert(0).
+		insert(15).
+		insert(25)
 }
