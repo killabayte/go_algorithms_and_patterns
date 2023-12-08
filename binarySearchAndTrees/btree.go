@@ -72,5 +72,7 @@ func main() {
 		insert(25)
 	printNode(t.node)
 
+	//True
 	println(t.node.exists(25))
+
 }
