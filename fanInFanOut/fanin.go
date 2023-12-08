@@ -12,6 +12,10 @@ func sleep(){
 	)
 }
 
+func consumer(ch <- chan int){
+	
+}
+
 func producer(ch chan<- int, name string) {
 	for {
 		sleep()
@@ -25,4 +29,10 @@ func main() {
 	chA := make(chan int)
 	chB := make(chan int)
 	chC := make(chan int)
+
+	go producer(chA, "A")
+	go producer(chB, "B")
+
+	go consumer()
+
 }
