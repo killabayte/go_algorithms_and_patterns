@@ -22,5 +22,7 @@ func producer(ch chan<- int, name string) {
 }
 
 func main() {
-
+	chA := make(chan int)
+	chB := make(chan int)
+	chC := make(chan int)
 }
