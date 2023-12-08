@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -14,4 +15,8 @@ func process2(ch chan int) {
 func main() {
 	ch := make(chan int)
 	go process2(ch)
+
+	fmt.Println("Waiting for process")
+	n := <-ch
+	fmt.Printf("Process took %dms\n", n)
 }
