@@ -7,7 +7,7 @@ import (
 
 func echoWorker(in, out chan int) {
 	for {
-		n := in
+		n := <-in
 		time.Sleep(
 			time.Duration(rand.Intn(3000)) * time.Millisecond,
 		)
