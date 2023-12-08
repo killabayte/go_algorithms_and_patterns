@@ -35,6 +35,10 @@ func (n *Node) insert(value int) {
 	}
 }
 
+func (n *Node) exists(value int) bool {
+
+}
+
 func printNode(n *Node) {
 	if n == nil {
 		return
