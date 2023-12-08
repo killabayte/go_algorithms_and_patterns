@@ -43,6 +43,12 @@ func (n *Node) exists(value int) bool {
 	if n.value == value {
 		return true
 	}
+
+	if value <= n.value {
+		return n.left.exists(value)
+	} else {
+		return n.right.exists(value)
+	}
 }
 
 func printNode(n *Node) {
@@ -65,4 +71,5 @@ func main() {
 		insert(15).
 		insert(25)
 	printNode(t.node)
+
 }
