@@ -8,6 +8,7 @@ import (
 func process2(ch chan int) {
 	n := rand.Intn(3000)
 	time.Sleep(time.Duration(n) * time.Millisecond)
+	ch <- n
 }
 
 func main() {
