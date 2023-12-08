@@ -32,7 +32,9 @@ func fanIn(chA, chB <- chan int, chC chan <- int){
 	for {
 		select{
 		case n = <- chA:
+			chC <- n
 		case n = <- chB:
+			chC <- n
 		}
 	}
 }
