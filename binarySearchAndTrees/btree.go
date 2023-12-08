@@ -39,6 +39,10 @@ func (n *Node) exists(value int) bool {
 	if n == nil {
 		return false
 	}
+
+	if n.value = value{
+		return true
+	}
 }
 
 func printNode(n *Node) {
