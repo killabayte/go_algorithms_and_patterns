@@ -34,3 +34,8 @@ func (n *Node) insert(value int) {
 		}
 	}
 }
+
+func main() {
+	t := &Tree{}
+
+}
