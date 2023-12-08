@@ -27,6 +27,10 @@ func producer(ch chan<- int) {
 	}
 }
 
+func fanOut(chA <-chan int, chB, chC chan<- int) {
+
+}
+
 func main() {
 	chA := make(chan int)
 	chB := make(chan int)
