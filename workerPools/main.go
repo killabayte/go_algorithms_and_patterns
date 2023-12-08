@@ -11,6 +11,7 @@ func echoWorker(in, out chan int) {
 		time.Sleep(
 			time.Duration(rand.Intn(3000)) * time.Millisecond,
 		)
+		out <- n
 	}
 }
 
