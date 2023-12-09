@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"os"
 	"sort"
@@ -12,6 +13,38 @@ import (
 
 	"github.com/go-resty/resty"
 )
+
+type CommissionRates struct {
+	Maker  string `json:"maker"`
+	Taker  string `json:"taker"`
+	Buyer  string `json:"buyer"`
+	Seller string `json:"seller"`
+}
+
+type Balance struct {
+	Asset  string `json:"asset"`
+	Free   string `json:"free"`
+	Locked string `json:"locked"`
+}
+
+type AccountInfo struct {
+	MakerCommission            int             `json:"makerCommission"`
+	TakerCommission            int             `json:"takerCommission"`
+	BuyerCommission            int             `json:"buyerCommission"`
+	SellerCommission           int             `json:"sellerCommission"`
+	CommissionRates            CommissionRates `json:"commissionRates"`
+	CanTrade                   bool            `json:"canTrade"`
+	CanWithdraw                bool            `json:"canWithdraw"`
+	CanDeposit                 bool            `json:"canDeposit"`
+	Brokered                   bool            `json:"brokered"`
+	RequireSelfTradePrevention bool            `json:"requireSelfTradePrevention"`
+	PreventSor                 bool            `json:"preventSor"`
+	UpdateTime                 int64           `json:"updateTime"`
+	AccountType                string          `json:"accountType"`
+	Balances                   []Balance       `json:"balances"`
+	Permissions                []string        `json:"permissions"`
+	UID                        int64           `json:"uid"`
+}
 
 var (
 	apiKey    = os.Getenv("BINANCE_API_KEY")
@@ -39,7 +72,7 @@ func generateSignature(params map[string]string) string {
 	return signature
 }
 
-func makeBinanceRequest(client *resty.Client, endpoint string, params map[string]string) string {
+func makeBinanceRequest(client *resty.Client, endpoint string, params map[string]string) []byte {
 	params["timestamp"] = fmt.Sprintf("%d", time.Now().Unix()*1000)
 	params["signature"] = generateSignature(params)
 
@@ -49,22 +82,27 @@ func makeBinanceRequest(client *resty.Client, endpoint string, params map[string
 		Get(baseURL + endpoint)
 
 	if err != nil {
-		return fmt.Sprintf("Error making request to %s: %s", endpoint, err)
+		fmt.Println("Error:", err)
+		return nil
 	}
 
-	return string(response.Body())
+	return response.Body()
 }
 
 func main() {
 	client := resty.New()
 
-	// Request account information
-	accountInfo := makeBinanceRequest(client, "/api/v3/account", map[string]string{})
-	fmt.Println("Account Information:")
-	fmt.Println(accountInfo)
+	var accountInfo AccountInfo
 
-	// Request spot transaction history for a specific symbol (replace "UNIUSDT" with the desired symbol)
-	tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": "UNIUSDT"})
-	fmt.Println("\nSpot Trade History:")
-	fmt.Println(tradeHistory)
+	// Unmarshal the JSON data into the struct
+	err := json.Unmarshal(makeBinanceRequest(client, "/api/v3/account", map[string]string{}), &accountInfo)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Access balances data
+	for _, balance := range accountInfo.Balances {
+		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
+	}
 }
