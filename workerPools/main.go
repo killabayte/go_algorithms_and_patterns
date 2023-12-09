@@ -31,4 +31,8 @@ func main() {
 
 	go echoWorker(in, out)
 	go produce(in)
+
+	for n := range out {
+		fmt.Printf("<- Receive job: %d\n", n)
+	}
 }
