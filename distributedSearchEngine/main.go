@@ -25,3 +25,12 @@ type worker struct {
 func NewWorker(users []User) *Worker {
 	return &Worker{users: users}
 }
+
+func (w *Worker) Find(email string) *User {
+	for _, u := range w.users {
+		if u.Email == email {
+			return &u
+		}
+	}
+	return nil
+}
