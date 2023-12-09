@@ -40,10 +40,8 @@ func generateSignature(params map[string]string) string {
 }
 
 func makeBinanceRequest(client *resty.Client, endpoint string, params map[string]string) string {
-	if endpoint != "/api/v3/exchangeInfo" {
-		params["timestamp"] = fmt.Sprintf("%d", time.Now().Unix()*1000)
-		params["signature"] = generateSignature(params)
-	}
+	params["timestamp"] = fmt.Sprintf("%d", time.Now().Unix()*1000)
+	params["signature"] = generateSignature(params)
 
 	response, err := client.R().
 		SetQueryParams(params).
@@ -69,9 +67,4 @@ func main() {
 	tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": "UNIUSDT"})
 	fmt.Println("\nSpot Trade History:")
 	fmt.Println(tradeHistory)
-
-	// Request exchange information
-	exchangeInfo := makeBinanceRequest(client, "/api/v3/exchangeInfo", map[string]string{})
-	fmt.Println("\nExchange Information:")
-	fmt.Println(exchangeInfo)
 }
