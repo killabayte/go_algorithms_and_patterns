@@ -41,4 +41,9 @@ func main(){
 	w := NewWorker(DataBase)
 	log.Printf("Searching for %s...\n", email)
 	user := w.Find(email)
+	if user != nil {
+		log.Printf("User found: %+v\n", user)
+	} else {
+		log.Printf("User not found\n")
+	}
 }
