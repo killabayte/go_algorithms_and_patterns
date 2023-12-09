@@ -23,7 +23,7 @@ var DataBase = []User{
 	{Email: "Robbie@example.com", Name: "Robbie"},
 }
 
-type worker struct {
+type Worker struct {
 	users []User
 }
 
