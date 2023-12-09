@@ -42,7 +42,7 @@ func main(){
 	log.Printf("Searching for %s...\n", email)
 	user := w.Find(email)
 	if user != nil {
-		log.Printf("User found: %+v\n", user)
+		log.Printf("This email %s is owned by: %s\n", email, user.Name)
 	} else {
 		log.Printf("User not found\n")
 	}
