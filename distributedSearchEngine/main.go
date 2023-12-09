@@ -35,3 +35,7 @@ func (w *Worker) Find(email string) *User {
 	}
 	return nil
 }
+
+func main(){
+	
+}
