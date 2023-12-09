@@ -28,6 +28,7 @@ func produce(ch chan<- int) {
 func main() {
 	in := make(chan int)
 	out := make(chan int)
+
 	for i := 0; i < 4; i++ {
 		go echoWorker(in, out)
 	}
