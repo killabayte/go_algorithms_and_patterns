@@ -37,6 +37,7 @@ func (w *Worker) Find(email string) *User {
 }
 
 func main(){
+	os.Args[1]
 	w := NewWorker(DataBase)
-	
+	w.Find(email)
 }
