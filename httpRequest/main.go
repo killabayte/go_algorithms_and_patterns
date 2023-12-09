@@ -14,31 +14,24 @@ import (
 )
 
 var (
-	apiKey    = os.Args[1]
-	secretKey = os.Args[2]
+	apiKey    = os.Getenv("BINANCE_API_KEY")
+	secretKey = os.Getenv("BINANCE_SECRET_KEY")
 	baseURL   = "https://api.binance.com"
 )
 
 func generateSignature(params map[string]string) string {
-	// Create a slice of parameter keys
 	var keys []string
 	for k := range params {
 		keys = append(keys, k)
 	}
-
-	// Sort the keys alphabetically
 	sort.Strings(keys)
 
-	// Construct the query string
 	var queryString string
 	for _, k := range keys {
 		queryString += k + "=" + params[k] + "&"
 	}
-
-	// Remove the trailing "&"
 	queryString = strings.TrimSuffix(queryString, "&")
 
-	// Hash the query string using HMAC SHA256 with the API secret
 	mac := hmac.New(sha256.New, []byte(secretKey))
 	mac.Write([]byte(queryString))
 	signature := hex.EncodeToString(mac.Sum(nil))
@@ -46,24 +39,39 @@ func generateSignature(params map[string]string) string {
 	return signature
 }
 
-func main() {
-	client := resty.New()
-
-	endpoint := "/api/v3/account"
-	params := map[string]string{
-		"timestamp": fmt.Sprintf("%d", time.Now().Unix()*1000),
+func makeBinanceRequest(client *resty.Client, endpoint string, params map[string]string) string {
+	if endpoint != "/api/v3/exchangeInfo" {
+		params["timestamp"] = fmt.Sprintf("%d", time.Now().Unix()*1000)
+		params["signature"] = generateSignature(params)
 	}
-	signature := generateSignature(params)
-	params["signature"] = signature
 
-	responce, err := client.R().
+	response, err := client.R().
 		SetQueryParams(params).
 		SetHeader("X-MBX-APIKEY", apiKey).
 		Get(baseURL + endpoint)
 
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		return fmt.Sprintf("Error making request to %s: %s", endpoint, err)
 	}
-	fmt.Println("Responce:", string(responce.Body()))
+
+	return string(response.Body())
+}
+
+func main() {
+	client := resty.New()
+
+	// Request account information
+	accountInfo := makeBinanceRequest(client, "/api/v3/account", map[string]string{})
+	fmt.Println("Account Information:")
+	fmt.Println(accountInfo)
+
+	// Request spot transaction history for a specific symbol (replace "UNIUSDT" with the desired symbol)
+	tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": "UNIUSDT"})
+	fmt.Println("\nSpot Trade History:")
+	fmt.Println(tradeHistory)
+
+	// Request exchange information
+	exchangeInfo := makeBinanceRequest(client, "/api/v3/exchangeInfo", map[string]string{})
+	fmt.Println("\nExchange Information:")
+	fmt.Println(exchangeInfo)
 }
