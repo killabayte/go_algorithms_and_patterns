@@ -32,7 +32,7 @@ func NewWorker(users []User) *Worker {
 }
 
 func (w *Worker) Find(email string) *User {
-	for _, u := range w.users {
+	for i := range w.users {
 		user := &w.users[i]
 		if user.Email == email {
 			return user
