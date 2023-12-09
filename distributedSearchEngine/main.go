@@ -40,5 +40,5 @@ func main(){
 	email := os.Args[1]
 	w := NewWorker(DataBase)
 	log.Printf("Searching for %s...\n", email)
-	w.Find(email)
+	user := w.Find(email)
 }
