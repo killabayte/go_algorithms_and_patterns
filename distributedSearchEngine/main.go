@@ -49,6 +49,6 @@ func main() {
 	if user != nil {
 		log.Printf("This email %s is owned by: %s\n", email, user.Name)
 	} else {
-		log.Printf("User with such email %s was not found\n", email)
+		log.Printf("User with: %s, 'email' was not found\n", email)
 	}
 }
