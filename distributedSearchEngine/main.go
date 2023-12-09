@@ -1,5 +1,10 @@
 package main
 
+import (
+	"log"
+	"os"
+)
+
 type User struct {
 	Email string
 	Name  string
@@ -15,7 +20,7 @@ var DataBase = []User{
 	{Email: "gabbie@example.com", Name: "Gabbie"},
 	{Email: "joe@example.com", Name: "Joe"},
 	{Email: "Bob@example.com", Name: "Bob"},
-	{Email: "Robbie@example.com", Name: "Robbie"}
+	{Email: "Robbie@example.com", Name: "Robbie"},
 }
 
 type worker struct {
@@ -36,7 +41,7 @@ func (w *Worker) Find(email string) *User {
 	return nil
 }
 
-func main(){
+func main() {
 	email := os.Args[1]
 	w := NewWorker(DataBase)
 	log.Printf("Searching for %s...\n", email)
