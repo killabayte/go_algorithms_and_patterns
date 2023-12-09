@@ -19,8 +19,8 @@ var DataBase = []User{
 	{Email: "luck@example.com", Name: "luck"},
 	{Email: "gabbie@example.com", Name: "Gabbie"},
 	{Email: "joe@example.com", Name: "Joe"},
-	{Email: "Bob@example.com", Name: "Bob"},
-	{Email: "Robbie@example.com", Name: "Robbie"},
+	{Email: "bob@example.com", Name: "Bob"},
+	{Email: "bobbie@example.com", Name: "Robbie"},
 }
 
 type Worker struct {
