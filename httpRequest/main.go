@@ -89,6 +89,39 @@ func makeBinanceRequest(client *resty.Client, endpoint string, params map[string
 	return response.Body()
 }
 
+func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
+	var assetsProcessed int
+	for _, symbol := range symbols {
+		// Assuming the symbols are single tokens like "ARN", "BCPT", "CND"
+		// Adding "USDT" as the default trading pair
+		tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
+
+		// Check if trade history is empty or contains "Invalid symbol"
+		if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
+			fmt.Printf("\nIgnoring symbol %s due to empty or invalid trade history.\n", symbol)
+			continue
+		}
+
+		fmt.Printf("\nSpot Trade History for %s:\n", symbol)
+		fmt.Println(string(tradeHistory))
+		assetsProcessed++
+	}
+	fmt.Println("\nTotal assets processed:", assetsProcessed)
+}
+
+func extractSymbols(accountInfo AccountInfo) []string {
+	var symbols []string
+
+	for _, balance := range accountInfo.Balances {
+		// Assuming that non-zero balances indicate ownership of the asset
+		if balance.Free != "0" || balance.Locked != "0" {
+			symbols = append(symbols, balance.Asset)
+		}
+	}
+
+	return symbols
+}
+
 func main() {
 	client := resty.New()
 
@@ -105,4 +138,11 @@ func main() {
 	for _, balance := range accountInfo.Balances {
 		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
 	}
+
+	// Extract symbols from accountInfo
+	symbols := extractSymbols(accountInfo)
+	fmt.Println("Symbols:", symbols)
+
+	// Get trade history for the extracted symbols
+	getTradeHistoryForSymbols(client, symbols)
 }
