@@ -90,7 +90,7 @@ func makeBinanceRequest(client *resty.Client, endpoint string, params map[string
 }
 
 func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
-	var assetsProcessed int
+	var activeAssetsProcessed, inactiveAssetsProcessed int
 	for _, symbol := range symbols {
 		// Assuming the symbols are single tokens like "ARN", "BCPT", "CND"
 		// Adding "USDT" as the default trading pair
@@ -99,14 +99,18 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
 		// Check if trade history is empty or contains "Invalid symbol"
 		if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
 			fmt.Printf("\nIgnoring symbol %s due to empty or invalid trade history.\n", symbol)
+			inactiveAssetsProcessed++
 			continue
 		}
 
 		fmt.Printf("\nSpot Trade History for %s:\n", symbol)
 		fmt.Println(string(tradeHistory))
-		assetsProcessed++
+		activeAssetsProcessed++
 	}
-	fmt.Println("\nTotal assets processed:", assetsProcessed)
+
+	fmt.Println("\nTotal assets processed:", activeAssetsProcessed+inactiveAssetsProcessed)
+	fmt.Println("Active assets processed:", activeAssetsProcessed)
+	fmt.Println("Inactive assets processed:", inactiveAssetsProcessed)
 }
 
 func extractSymbols(accountInfo AccountInfo) []string {
