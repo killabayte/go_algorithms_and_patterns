@@ -39,7 +39,6 @@ func (w *Worker) Find(email string) {
 			ch <- user
 		}
 	}
-	return nil
 }
 
 func main() {
