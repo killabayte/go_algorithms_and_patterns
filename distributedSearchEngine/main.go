@@ -46,8 +46,8 @@ func main() {
 
 	ch := make(chan *User)
 	w := NewWorker(DataBase, ch)
-	log.Printf("Searching for %s...\n", email)
 
+	log.Printf("Searching for %s...\n", email)
 	go w.Find(email)
 
 	if user != nil {
