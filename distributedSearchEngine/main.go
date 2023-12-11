@@ -50,9 +50,6 @@ func main() {
 	log.Printf("Searching for %s...\n", email)
 	go w.Find(email)
 
-	if user != nil {
-		log.Printf("This email %s is owned by: %s\n", email, user.Name)
-	} else {
-		log.Printf("User with: %s, 'email' was not found\n", email)
-	}
+	user := <-ch
+	log.Printf("This email %s is owned by: %s\n", email, user.Name)
 }
