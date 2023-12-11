@@ -14,6 +14,7 @@ type User struct {
 
 var DataBase = []User{
 	{Email: "alex@example.com", Name: "Alex"},
+	{Email: "alex.brandon@example.com", Name: "Alex Brandon"},
 	{Email: "barbara@example.com", Name: "Barbara"},
 	{Email: "scott@example.com", Name: "Scott"},
 	{Email: "jhon@example.com", Name: "Jhon"},
@@ -66,6 +67,6 @@ func main() {
 	case user := <-ch:
 		log.Printf("This email %s is owned by: %s\n", user.Email, user.Name)
 	case <-time.After(100 * time.Millisecond):
-		log.Printf("The email %s was not found\n", email)
+		return
 	}
 }
