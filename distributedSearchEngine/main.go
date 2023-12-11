@@ -27,7 +27,7 @@ type Worker struct {
 	users []User
 }
 
-func NewWorker(users []User) *Worker {
+func NewWorker(users []User. ch chan *User) *Worker {
 	return &Worker{users: users}
 }
 
@@ -44,7 +44,7 @@ func (w *Worker) Find(email string) *User {
 func main() {
 	email := os.Args[1]
 	ch := make(chan *User)
-	w := NewWorker(DataBase)
+	w := NewWorker(DataBase, ch)
 	log.Printf("Searching for %s...\n", email)
 	user := w.Find(email)
 	if user != nil {
