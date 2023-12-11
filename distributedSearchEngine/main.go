@@ -36,7 +36,7 @@ func (w *Worker) Find(email string) {
 	for i := range w.users {
 		user := &w.users[i]
 		if user.Email == email {
-			ch <- user
+			w.ch <- user
 		}
 	}
 }
@@ -46,7 +46,7 @@ func main() {
 	ch := make(chan *User)
 	w := NewWorker(DataBase, ch)
 	log.Printf("Searching for %s...\n", email)
-
+	go w.Find(email)
 	if user != nil {
 		log.Printf("This email %s is owned by: %s\n", email, user.Name)
 	} else {
