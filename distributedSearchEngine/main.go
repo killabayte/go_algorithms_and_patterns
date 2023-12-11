@@ -49,6 +49,8 @@ func main() {
 	w := NewWorker(DataBase, ch)
 
 	log.Printf("Searching for %s...\n", email)
+	go NewWorker(DataBase[:len(DataBase)/2], ch).Find(email)
+	go NewWorker(DataBase[len(DataBase)/2:], ch).Find(email)
 	go w.Find(email)
 
 	select {
