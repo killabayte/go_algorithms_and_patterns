@@ -64,7 +64,7 @@ func main() {
 
 	select {
 	case user := <-ch:
-		log.Printf("This email %s is owned by: %s\n", email, user.Name)
+		log.Printf("This email %s is owned by: %s\n", user.Email, user.Name)
 	case <-time.After(100 * time.Millisecond):
 		log.Printf("The email %s was not found\n", email)
 	}
