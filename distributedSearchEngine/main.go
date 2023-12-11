@@ -50,6 +50,11 @@ func main() {
 	log.Printf("Searching for %s...\n", email)
 	go w.Find(email)
 
+	select {
+	case user := <-ch:
+		log.Printf("This email %s is owned by: %s\n", email, user.Name)
+	}
+
 	user := <-ch
 	log.Printf("This email %s is owned by: %s\n", email, user.Name)
 }
