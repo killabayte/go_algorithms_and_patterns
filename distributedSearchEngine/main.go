@@ -29,7 +29,7 @@ type Worker struct {
 	ch    chan *User
 }
 
-func NewWorker(users []User, ch chan *User) *Worker {
+func NewWorker(users []User, ch chan *User, name string) *Worker {
 	return &Worker{users: users, ch: ch}
 }
 
@@ -56,10 +56,10 @@ func main() {
 	fourthPart := DataBase[3*partSize:]
 
 	log.Printf("Searching for %s...\n", email)
-	go NewWorker(firstPart, ch).Find(email)
-	go NewWorker(secondPart, ch).Find(email)
-	go NewWorker(thirdPart, ch).Find(email)
-	go NewWorker(fourthPart, ch).Find(email)
+	go NewWorker(firstPart, ch, "#1").Find(email)
+	go NewWorker(secondPart, ch, "#2").Find(email)
+	go NewWorker(thirdPart, ch, "#3").Find(email)
+	go NewWorker(fourthPart, ch, "#4").Find(email)
 	go w.Find(email)
 
 	select {
