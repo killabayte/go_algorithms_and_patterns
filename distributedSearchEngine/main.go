@@ -63,10 +63,12 @@ func main() {
 	go NewWorker(thirdPart, ch, "#3").Find(email)
 	go NewWorker(fourthPart, ch, "#4").Find(email)
 
-	select {
-	case user := <-ch:
-		log.Printf("This email %s is owned by: %s\n", user.Email, user.Name)
-	case <-time.After(100 * time.Millisecond):
-		return
+	for {
+		select {
+		case user := <-ch:
+			log.Printf("This email %s is owned by: %s\n", user.Email, user.Name)
+		case <-time.After(100 * time.Millisecond):
+			return
+		}
 	}
 }
