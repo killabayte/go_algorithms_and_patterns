@@ -25,10 +25,11 @@ var DataBase = []User{
 
 type Worker struct {
 	users []User
+	ch    chan *User
 }
 
-func NewWorker(users []User. ch chan *User) *Worker {
-	return &Worker{users: users}
+func NewWorker(users []User, ch chan *User) *Worker {
+	return &Worker{users: users, ch: ch}
 }
 
 func (w *Worker) Find(email string) *User {
