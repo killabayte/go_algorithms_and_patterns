@@ -32,7 +32,7 @@ type Worker struct {
 }
 
 func NewWorker(users []User, ch chan *User, name string) *Worker {
-	return &Worker{users: users, ch: ch}
+	return &Worker{users: users, ch: ch, name: name}
 }
 
 func (w *Worker) Find(email string) {
@@ -49,7 +49,6 @@ func main() {
 	email := os.Args[1]
 
 	ch := make(chan *User)
-	w := NewWorker(DataBase, ch)
 
 	// Split the database into four parts
 	partSize := len(DataBase) / 4
@@ -63,7 +62,6 @@ func main() {
 	go NewWorker(secondPart, ch, "#2").Find(email)
 	go NewWorker(thirdPart, ch, "#3").Find(email)
 	go NewWorker(fourthPart, ch, "#4").Find(email)
-	go w.Find(email)
 
 	select {
 	case user := <-ch:
