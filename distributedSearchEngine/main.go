@@ -43,6 +43,7 @@ func (w *Worker) Find(email string) *User {
 
 func main() {
 	email := os.Args[1]
+	ch := make(chan *User)
 	w := NewWorker(DataBase)
 	log.Printf("Searching for %s...\n", email)
 	user := w.Find(email)
