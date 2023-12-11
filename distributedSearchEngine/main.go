@@ -36,7 +36,7 @@ func (w *Worker) Find(email string) {
 	for i := range w.users {
 		user := &w.users[i]
 		if user.Email == email {
-			return user
+			ch <- user
 		}
 	}
 	return nil
