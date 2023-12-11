@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 )
 
 type User struct {
@@ -53,8 +54,7 @@ func main() {
 	select {
 	case user := <-ch:
 		log.Printf("This email %s is owned by: %s\n", email, user.Name)
+	case <-time.After(1 * time.Second):
+		log.Printf("The email %s was not found\n", email)
 	}
-
-	user := <-ch
-	log.Printf("This email %s is owned by: %s\n", email, user.Name)
 }
