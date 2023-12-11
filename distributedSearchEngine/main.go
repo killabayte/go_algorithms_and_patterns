@@ -48,9 +48,18 @@ func main() {
 	ch := make(chan *User)
 	w := NewWorker(DataBase, ch)
 
+	// Split the database into four parts
+	partSize := len(DataBase) / 4
+	firstPart := DataBase[:partSize]
+	secondPart := DataBase[partSize : 2*partSize]
+	thirdPart := DataBase[2*partSize : 3*partSize]
+	fourthPart := DataBase[3*partSize:]
+
 	log.Printf("Searching for %s...\n", email)
-	go NewWorker(DataBase[:len(DataBase)/2], ch).Find(email)
-	go NewWorker(DataBase[len(DataBase)/2:], ch).Find(email)
+	go NewWorker(firstPart, ch).Find(email)
+	go NewWorker(secondPart, ch).Find(email)
+	go NewWorker(thirdPart, ch).Find(email)
+	go NewWorker(fourthPart, ch).Find(email)
 	go w.Find(email)
 
 	select {
