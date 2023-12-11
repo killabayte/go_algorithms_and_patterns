@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -38,8 +38,7 @@ func NewWorker(users []User, ch chan *User, name string) *Worker {
 func (w *Worker) Find(email string) {
 	for i := range w.users {
 		user := &w.users[i]
-		if user.Email == email {
-			fmt.Println(">>", w.name)
+		if strings.Contains(user.Email, email) {
 			w.ch <- user
 		}
 	}
