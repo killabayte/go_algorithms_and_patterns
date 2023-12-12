@@ -53,7 +53,6 @@ var (
 )
 
 func generateSignature(params map[string]string) string {
-
 	var keys []string
 	for k := range params {
 		keys = append(keys, k)
