@@ -149,4 +149,5 @@ func main() {
 
 	// Get trade history for the extracted symbols
 	getTradeHistoryForSymbols(client, symbols)
+
 }
