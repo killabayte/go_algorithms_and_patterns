@@ -37,6 +37,7 @@ func NewWorker(users []User, ch chan *User, name string) *Worker {
 }
 
 func (w *Worker) Find(email string) {
+
 	for i := range w.users {
 		user := &w.users[i]
 		if strings.Contains(user.Email, email) {
