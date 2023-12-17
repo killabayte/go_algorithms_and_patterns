@@ -114,6 +114,7 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
 				activeAssetsProcessed++
 			}
 		}(symbol)
+		time.Sleep(200 * time.Millisecond)
 	}
 
 	wg.Wait()
@@ -149,9 +150,9 @@ func main() {
 	}
 
 	// Access balances data
-	// for _, balance := range accountInfo.Balances {
-	// 	fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
-	// }
+	for _, balance := range accountInfo.Balances {
+		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
+	}
 
 	// Extract symbols from accountInfo
 	symbols := extractSymbols(accountInfo)
