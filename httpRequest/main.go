@@ -114,7 +114,7 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
 				activeAssetsProcessed++
 			}
 		}(symbol)
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(150 * time.Millisecond)
 	}
 
 	wg.Wait()
