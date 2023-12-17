@@ -9,6 +9,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-resty/resty"
@@ -91,21 +92,31 @@ func makeBinanceRequest(client *resty.Client, endpoint string, params map[string
 
 func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
 	var activeAssetsProcessed, inactiveAssetsProcessed int
+	var wg sync.WaitGroup
+	var mu sync.Mutex // Mutex to safely update counters
+
 	for _, symbol := range symbols {
-		// Assuming the symbols are single tokens like "ARN", "BCPT", "CND"
-		// Adding "USDT" as the default trading pair
-		tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
+		wg.Add(1)
+		go func(symbol string) {
+			defer wg.Done()
 
-		// Check if trade history is empty or contains "Invalid symbol"
-		if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
-			inactiveAssetsProcessed++
-			continue
-		}
+			tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
 
-		fmt.Printf("\nSpot Trade History for %s:\n", symbol)
-		fmt.Println(string(tradeHistory))
-		activeAssetsProcessed++
+			mu.Lock()
+			defer mu.Unlock()
+
+			// Update counters
+			if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
+				inactiveAssetsProcessed++
+			} else {
+				fmt.Printf("\nSpot Trade History for %s:\n", symbol)
+				fmt.Println(string(tradeHistory))
+				activeAssetsProcessed++
+			}
+		}(symbol)
 	}
+
+	wg.Wait()
 
 	fmt.Println("\nTotal assets processed:", activeAssetsProcessed+inactiveAssetsProcessed)
 	fmt.Println("Active assets processed:", activeAssetsProcessed)
