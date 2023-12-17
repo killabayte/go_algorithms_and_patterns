@@ -95,10 +95,9 @@ type TradeHistory struct {
 	Data   string `json:"data"`
 }
 
-func getTradeHistoryForSymbol(client *resty.Client, symbol string, ch chan<- TradeHistory) {
+func getTradeHistoryForSymbol(client *resty.Client, symbol string) TradeHistory {
 	tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
-
-	ch <- TradeHistory{Symbol: symbol, Data: string(tradeHistory)}
+	return TradeHistory{Symbol: symbol, Data: string(tradeHistory)}
 }
 
 func getTradeHistoryForSymbols(client *resty.Client, symbols []string) []TradeHistory {
@@ -110,7 +109,10 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) []TradeHi
 		wg.Add(1)
 		go func(symbol string) {
 			defer wg.Done()
-			getTradeHistoryForSymbol(client, symbol, ch)
+			tradeHistory := getTradeHistoryForSymbol(client, symbol)
+			if tradeHistory.Data != "[]" && !strings.Contains(tradeHistory.Data, "Invalid symbol") {
+				ch <- tradeHistory
+			}
 		}(symbol)
 		time.Sleep(200 * time.Millisecond)
 	}
