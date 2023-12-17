@@ -98,7 +98,6 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
 
 		// Check if trade history is empty or contains "Invalid symbol"
 		if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
-			fmt.Printf("\nIgnoring symbol %s due to empty or invalid trade history.\n", symbol)
 			inactiveAssetsProcessed++
 			continue
 		}
@@ -139,9 +138,9 @@ func main() {
 	}
 
 	// Access balances data
-	for _, balance := range accountInfo.Balances {
-		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
-	}
+	// for _, balance := range accountInfo.Balances {
+	// 	fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
+	// }
 
 	// Extract symbols from accountInfo
 	symbols := extractSymbols(accountInfo)
