@@ -90,45 +90,63 @@ func makeBinanceRequest(client *resty.Client, endpoint string, params map[string
 	return response.Body()
 }
 
-func getTradeHistoryForSymbols(client *resty.Client, symbols []string) {
-	var activeAssetsProcessed, inactiveAssetsProcessed int
+type TradeHistory struct {
+	Symbol string `json:"symbol"`
+	Data   string `json:"data"`
+}
+
+func getTradeHistoryForSymbol(client *resty.Client, symbol string, ch chan<- TradeHistory) {
+	tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
+
+	ch <- TradeHistory{Symbol: symbol, Data: string(tradeHistory)}
+}
+
+func getTradeHistoryForSymbols(client *resty.Client, symbols []string) []TradeHistory {
 	var wg sync.WaitGroup
-	var mu sync.Mutex // Mutex to safely update counters
+	tradeHistories := make([]TradeHistory, 0, len(symbols))
+	ch := make(chan TradeHistory, len(symbols))
 
 	for _, symbol := range symbols {
 		wg.Add(1)
 		go func(symbol string) {
 			defer wg.Done()
-
-			tradeHistory := makeBinanceRequest(client, "/api/v3/myTrades", map[string]string{"symbol": symbol + "USDT"})
-
-			mu.Lock()
-			defer mu.Unlock()
-
-			// Update counters
-			if len(tradeHistory) == 0 || string(tradeHistory) == "[]" || strings.Contains(string(tradeHistory), "Invalid symbol") {
-				inactiveAssetsProcessed++
-			} else {
-				fmt.Printf("\nSpot Trade History for %s:\n", symbol)
-				fmt.Println(string(tradeHistory))
-				activeAssetsProcessed++
-			}
+			getTradeHistoryForSymbol(client, symbol, ch)
 		}(symbol)
-		time.Sleep(175 * time.Millisecond)
+		time.Sleep(200 * time.Millisecond)
 	}
 
-	wg.Wait()
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
 
-	fmt.Println("\nTotal assets processed:", activeAssetsProcessed+inactiveAssetsProcessed)
-	fmt.Println("Active assets processed:", activeAssetsProcessed)
-	fmt.Println("Inactive assets processed:", inactiveAssetsProcessed)
+	for th := range ch {
+		tradeHistories = append(tradeHistories, th)
+	}
+
+	return tradeHistories
+}
+
+func makeJSONFile(tradeHistories []TradeHistory) error {
+	jsonData, err := json.MarshalIndent(tradeHistories, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Create("trade_histories.json")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(jsonData)
+	return err
 }
 
 func extractSymbols(accountInfo AccountInfo) []string {
 	var symbols []string
 
 	for _, balance := range accountInfo.Balances {
-		// Assuming that non-zero balances indicate ownership of the asset
 		if balance.Free != "0" || balance.Locked != "0" {
 			symbols = append(symbols, balance.Asset)
 		}
@@ -142,23 +160,29 @@ func main() {
 
 	var accountInfo AccountInfo
 
-	// Unmarshal the JSON data into the struct
 	err := json.Unmarshal(makeBinanceRequest(client, "/api/v3/account", map[string]string{}), &accountInfo)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	// Access balances data
 	for _, balance := range accountInfo.Balances {
 		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
 	}
 
-	// Extract symbols from accountInfo
 	symbols := extractSymbols(accountInfo)
 	fmt.Println("Symbols:", symbols)
 
 	// Get trade history for the extracted symbols
-	getTradeHistoryForSymbols(client, symbols)
+	tradeHistories := getTradeHistoryForSymbols(client, symbols)
+
+	// Make JSON file with trade histories
+	err = makeJSONFile(tradeHistories)
+	if err != nil {
+		fmt.Println("Error creating JSON file:", err)
+		return
+	}
+
+	fmt.Println("Trade histories saved to trade_histories.json")
 
 }
