@@ -14,13 +14,13 @@ import (
 func modifyParameters(parameter, env string) string {
 	switch env {
 	case "dev":
-		return strings.Replace(parameter, "/build/", "/dev/", 1)
+		return strings.Replace(parameter, "/local/", "/dev/", 1)
 	case "qa":
-		return strings.Replace(parameter, "/build/", "/qa/", 1)
+		return strings.Replace(parameter, "/local/", "/asgard/", 1)
 	case "stage":
-		return strings.Replace(parameter, "/build/", "/stable/", 1)
+		return strings.Replace(parameter, "/local/", "/stage/", 1)
 	case "build":
-		return strings.Replace(parameter, "/build/", "/build/", 1)
+		return strings.Replace(parameter, "/local/", "/local/", 1)
 	default:
 		fmt.Println("Do nothing")
 	}
@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// Define the list of environments
-	environments := []string{"dev", "qa", "stage", "build"}
+	environments := []string{"dev", "asgard", "stage", "local"}
 
 	// Loop through each environment and modify parameters
 	for _, env := range environments {
