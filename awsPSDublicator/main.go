@@ -4,11 +4,28 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
 )
+
+func modifyParameters(parameter, env string) string {
+	switch env {
+	case "dev":
+		return strings.Replace(parameter, "/build/", "/dev/", 1)
+	case "qa":
+		return strings.Replace(parameter, "/build/", "/qa/", 1)
+	case "stage":
+		return strings.Replace(parameter, "/build/", "/stable/", 1)
+	case "build":
+		return strings.Replace(parameter, "/build/", "/build/", 1)
+	default:
+		fmt.Println("Do nothing")
+	}
+	return parameter
+}
 
 func main() {
 	var showHelp bool
@@ -30,57 +47,66 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Create an AWS session and SSM client
-	sess := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String(region),
-	}))
-	ssmClient := ssm.New(sess)
+	// Define the list of environments
+	environments := []string{"dev", "qa", "stage", "build"}
 
-	// Check if the destination parameter exists
-	destParamInput := &ssm.GetParameterInput{
-		Name: aws.String(destParameterName),
-	}
-	destParamOutput, err := ssmClient.GetParameter(destParamInput)
-	if err != nil {
-		fmt.Printf("Error getting destination parameter %s: %v\n", destParameterName, err)
-		os.Exit(1)
-	}
+	// Loop through each environment and modify parameters
+	for _, env := range environments {
+		modifiedSrcParameterName := modifyParameters(srcParameterName, env)
+		modifiedDestParameterName := modifyParameters(destParameterName, env)
 
-	// Get the source parameter value
-	srcParamInput := &ssm.GetParameterInput{
-		Name:           aws.String(srcParameterName),
-		WithDecryption: aws.Bool(true),
-	}
-	srcParamOutput, err := ssmClient.GetParameter(srcParamInput)
-	if err != nil {
-		fmt.Println("Error getting source parameter:", err)
-		os.Exit(1)
-	}
+		// Create an AWS session and SSM client
+		sess := session.Must(session.NewSession(&aws.Config{
+			Region: aws.String(region),
+		}))
+		ssmClient := ssm.New(sess)
 
-	// Print the values before overwriting
-	fmt.Printf("Before Overwrite:\nSource Parameter (%s): %s\nDestination Parameter (%s): %s\n",
-		srcParameterName, *srcParamOutput.Parameter.Value,
-		destParameterName, *destParamOutput.Parameter.Value)
+		// Check if the destination parameter exists
+		destParamInput := &ssm.GetParameterInput{
+			Name: aws.String(modifiedDestParameterName),
+		}
+		destParamOutput, err := ssmClient.GetParameter(destParamInput)
+		if err != nil {
+			fmt.Printf("Error getting destination parameter %s: %v\n", modifiedDestParameterName, err)
+			os.Exit(1)
+		}
 
-	// Create or update the destination parameter
-	destParamInputPut := &ssm.PutParameterInput{
-		Name:      aws.String(destParameterName),
-		Value:     srcParamOutput.Parameter.Value,
-		Type:      srcParamOutput.Parameter.Type,
-		Overwrite: aws.Bool(true),
+		// Get the source parameter value
+		srcParamInput := &ssm.GetParameterInput{
+			Name:           aws.String(modifiedSrcParameterName),
+			WithDecryption: aws.Bool(true),
+		}
+		srcParamOutput, err := ssmClient.GetParameter(srcParamInput)
+		if err != nil {
+			fmt.Println("Error getting source parameter:", err)
+			os.Exit(1)
+		}
+
+		// Print the values before overwriting
+		fmt.Printf("\nBefore Overwrite:\nSource Parameter (%s): %s\nDestination Parameter (%s): %s\n",
+			modifiedSrcParameterName, *srcParamOutput.Parameter.Value,
+			modifiedDestParameterName, *destParamOutput.Parameter.Value)
+
+		// Create or update the destination parameter
+		destParamInputPut := &ssm.PutParameterInput{
+			Name:      aws.String(modifiedDestParameterName),
+			Value:     srcParamOutput.Parameter.Value,
+			Type:      srcParamOutput.Parameter.Type,
+			Overwrite: aws.Bool(true),
+		}
+		_, err = ssmClient.PutParameter(destParamInputPut)
+		if err != nil {
+			fmt.Println("Error copying parameter:", err)
+			os.Exit(1)
+		}
+
+		// Print the values after overwriting
+		fmt.Printf("\nAfter Overwrite:\nSource Parameter (%s): %s\nDestination Parameter (%s): %s\n",
+			modifiedSrcParameterName, *srcParamOutput.Parameter.Value,
+			modifiedDestParameterName, *srcParamOutput.Parameter.Value)
+
+		fmt.Printf("\nParameter %s successfully copied to %s\n", modifiedSrcParameterName, modifiedDestParameterName)
 	}
-	_, err = ssmClient.PutParameter(destParamInputPut)
-	if err != nil {
-		fmt.Println("Error copying parameter:", err)
-		os.Exit(1)
-	}
-
-	// Print the values after overwriting
-	fmt.Printf("\nAfter Overwrite:\nSource Parameter (%s): %s\nDestination Parameter (%s): %s\n",
-		srcParameterName, *srcParamOutput.Parameter.Value,
-		destParameterName, *srcParamOutput.Parameter.Value)
-
-	fmt.Printf("\nParameter %s successfully copied to %s\n", srcParameterName, destParameterName)
 }
 
 func printHelp() {
@@ -88,4 +114,3 @@ func printHelp() {
 	fmt.Println("\nOptions:")
 	flag.PrintDefaults()
 }
-
