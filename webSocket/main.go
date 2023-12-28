@@ -77,6 +77,7 @@ func main() {
 	}
 	log.Println("Trades:", trades)
 
+	// Convert trades to JSON
 	tradesJSON, err := json.Marshal(trades)
 	if err != nil {
 		log.Println("json marshal error:", err)
