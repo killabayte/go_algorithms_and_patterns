@@ -143,35 +143,6 @@ func makeJSONFile(tradeHistories []TradeHistory) error {
 	return err
 }
 
-func extractSymbols(client *resty.Client, accountInfo AccountInfo) []string {
-	var symbols []string
-	var wg sync.WaitGroup
-	ch := make(chan string, len(accountInfo.Balances))
-
-	for _, balance := range accountInfo.Balances {
-		wg.Add(1)
-		go func(asset string) {
-			defer wg.Done()
-			tradeHistory := getTradeHistoryForSymbol(client, asset)
-			if tradeHistory.Data != "[]" && !strings.Contains(tradeHistory.Data, "Invalid symbol") {
-				ch <- asset
-			}
-		}(balance.Asset)
-		time.Sleep(200 * time.Millisecond)
-	}
-
-	go func() {
-		wg.Wait()
-		close(ch)
-	}()
-
-	for symbol := range ch {
-		symbols = append(symbols, symbol)
-	}
-
-	return symbols
-}
-
 func main() {
 	client := resty.New()
 
