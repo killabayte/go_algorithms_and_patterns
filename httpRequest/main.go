@@ -110,9 +110,7 @@ func getTradeHistoryForSymbols(client *resty.Client, symbols []string) []TradeHi
 		go func(symbol string) {
 			defer wg.Done()
 			tradeHistory := getTradeHistoryForSymbol(client, symbol)
-			if tradeHistory.Data != "[]" && !strings.Contains(tradeHistory.Data, "Invalid symbol") {
-				ch <- tradeHistory
-			}
+			ch <- tradeHistory
 		}(symbol)
 		time.Sleep(200 * time.Millisecond)
 	}
@@ -145,13 +143,30 @@ func makeJSONFile(tradeHistories []TradeHistory) error {
 	return err
 }
 
-func extractSymbols(accountInfo AccountInfo) []string {
+func extractSymbols(client *resty.Client, accountInfo AccountInfo) []string {
 	var symbols []string
+	var wg sync.WaitGroup
+	ch := make(chan string, len(accountInfo.Balances))
 
 	for _, balance := range accountInfo.Balances {
-		if balance.Free != "0" || balance.Locked != "0" {
-			symbols = append(symbols, balance.Asset)
-		}
+		wg.Add(1)
+		go func(asset string) {
+			defer wg.Done()
+			tradeHistory := getTradeHistoryForSymbol(client, asset)
+			if tradeHistory.Data != "[]" && !strings.Contains(tradeHistory.Data, "Invalid symbol") {
+				ch <- asset
+			}
+		}(balance.Asset)
+		time.Sleep(200 * time.Millisecond)
+	}
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	for symbol := range ch {
+		symbols = append(symbols, symbol)
 	}
 
 	return symbols
@@ -172,7 +187,7 @@ func main() {
 		fmt.Printf("Asset: %s, Free: %s, Locked: %s\n", balance.Asset, balance.Free, balance.Locked)
 	}
 
-	symbols := extractSymbols(accountInfo)
+	symbols := extractSymbols(client, accountInfo)
 	fmt.Println("Symbols:", symbols)
 
 	// Get trade history for the extracted symbols
