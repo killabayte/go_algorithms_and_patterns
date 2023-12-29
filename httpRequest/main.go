@@ -178,6 +178,7 @@ func main() {
 	// Get trade history for the extracted symbols
 	tradeHistories := getTradeHistoryForSymbols(client, symbols)
 
+	// Make JSON file with trade histories
 	err = makeJSONFile(tradeHistories)
 	if err != nil {
 		fmt.Println("Error creating JSON file:", err)
